@@ -9,6 +9,7 @@ Até recentemente, fui sócio e também  ocupava o cargo Consultor Sênior de de
 
 Atualmente, posso ser encontrado nos laboratórios de pesquisa do CEFET, onde sou aluno do Mestrado em Ciência da Computação (leia-se Data Science), ou em alguma das em empresas que contratam meus serviços como consultor independente.
 
+Para entrar em contato, mande mensagem para [jcolares@gmail.com](mailto:jcolares@gmail.com).
 
 
 
