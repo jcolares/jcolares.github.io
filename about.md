@@ -3,6 +3,9 @@ layout: page
 title: About
 ---
 
-Jefferson Colares é um consultor sênior de BI, mas usa esse site para compartilhar conhecimento adquirido em seu caminho na criação da Singularidade
-
+Olá.
+Me chamo Jefferson Colares. Sou um consultor de Business Intelligence do Rio de Janeiro.
+Anteriormente, eu fui sócio de uma empresa, a extinta Allana Services (aparentemente, não sou tão bom empresário quanto pensava) e, antes disso, funcionário das empresas SAP e Business Objects, onde exerci por 5 anos a função de consultor sênior de Analytics, atuando junto a algumas das maiores empresas do país. 
+No total, já são 12 anos de experiência em projetos, arquitetura e desenvolvimento de soluções analíticas.
+Atualmente, posso ser encontrado nos laboratórios de pesquisa do CEFET, onde sou aluno de mestrado em Ciência da Computação (leia-se Data Science), ou em alguma das em empresas que contratam meus serviços como consultor independente.
 
