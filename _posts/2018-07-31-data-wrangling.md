@@ -69,12 +69,43 @@ vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";",
                   )
 View(vra)
 ```
+# Agrupando dados de diferentes arquivos
+Os dados que estamos utilizando estão divididos em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises anuais. Se as colunas dos arquivos são semelhantes, podemos concatená-los com os comandos abaixo: 
+```
+vra02 <- read_delim("github/data-wrangling/VRA_do_MES_022017.csv", ";", 
+                  locale = locale(encoding = "ISO-8859-1"),
+                  col_types = cols("Código Autorização (DI)"= col_character(),
+                                   "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                                   "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                                   "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                                   "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
+                                   )
+                  )
+vra03 <- read_delim("github/data-wrangling/VRA_do_MES_032017.csv", ";", 
+                  locale = locale(encoding = "ISO-8859-1"),
+                  col_types = cols("Código Autorização (DI)"= col_character(),
+                                   "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                                   "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                                   "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                                   "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
+                                   )
+                  )
+vra <- rbind(vra, vra02, vra03)
+```
+Se uma das colunas for diferente em um dos arquivos, o rbind() acima não funcionará. Em nosso exemplo, isso ocorre com a coluna "Código Justificativa", que no vra03 tem o nome "CódigoJustificativa". Para renomeá-la, digite o comando abaixo:
+```
+colnames(vra03)[colnames(vra03)=="CódigoJustificativa"] <- "Código Justificativa"
 
-
-# Liberando espaço na memória
+```
+Agora é possível fazer o rbind():
+```
+vra <- rbind(vra, vra02, vra03)
+```
+## Liberando espaço na memória
 Considerando que muitas vezes estaremos lidando com grandes volumes de dados, não faz muito sentido ficar ocupando espaço precioso de memória com coisas que não pretendemos mais usar. Para apagar um dataframe da memória, use o comando abaixo:
 ```
-rm(nome_do_dataframe)
+rm(vra02)
+rm(vra03)
 ```
 
 
