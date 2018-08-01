@@ -11,21 +11,21 @@ Se você ainda não tem o R ou o RStudio instalados em sua máquina, siga as ins
 
 ### Bibliotecas necessárias
 Boa parte das atividades utiliza funções dos pacotes abaixo. Você precisará instalá-los para conseguir executar o código de exemplo:
-[tidyr](https://cran.r-project.org/web/packages/tidyr/README.html) 
-[readr](https://cran.r-project.org/web/packages/readr/README.html)
-[readxl](https://readxl.tidyverse.org/reference/read_excel.html)
-[dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html). 
+- [tidyr](https://cran.r-project.org/web/packages/tidyr/README.html) 
+- [readr](https://cran.r-project.org/web/packages/readr/README.html)
+- [readxl](https://readxl.tidyverse.org/reference/read_excel.html)
+- [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html). 
 
 ### Dataset de exemplo
 O dataset utilizado para todos os exemplos é o VRA, que contém o histórico de voos registrados pela ANAC. Ele pode ser obtido [nesse endereço](http://www.anac.gov.br/assuntos/dados-e-estatisticas/historico-de-voos). Só é necessário baixar os arquivos correspondentes aos meses de [janeiro](http://www.anac.gov.br/assuntos/dados-e-estatisticas/base-historica-1/vra/2017/VRA_do_MS_012017.zip), [fevereiro](http://www.anac.gov.br/assuntos/dados-e-estatisticas/base-historica-1/vra/2017/VRA_do_MS_022017.zip) e [março](Março) de 2017 e descompactar todos na mesma pasta.
 Além dos dados dos voos, precisaremos de alguns arquivos XLS Apenas baixe esses arquivos na mesma pasta que os anteriores:
-[Nomes das empresas aéreas](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_empresas_aereas.xls)
-[Nomes dos aeroportos.](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_aerodromo.xls)
-[Nomes dos Dígitos Identificadores (tipos de autorização)](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_digito_identificador.xls)
-[Nomes dos Tipos de Linha (Natureza)](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_tipo_de_linha.xls)
-[Nomes das justificativas de atrasos](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_justificativas.xls)
+- [Nomes das empresas aéreas](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_empresas_aereas.xls)
+- [Nomes dos aeroportos.](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_aerodromo.xls)
+- [Nomes dos Dígitos Identificadores (tipos de autorização)](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_digito_identificador.xls)
+- [Nomes dos Tipos de Linha (Natureza)](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_tipo_de_linha.xls)
+- [Nomes das justificativas de atrasos](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_justificativas.xls)
 
-## Carregando dados para o R
+## Carregando dados de arquivos
 ### Arquivos XLS (ou XLSX)
 Para carregar uma planilha, utilize o pacote readxl e a função read_excel(). Veja a linha de comando e, logo abaixo, a descrição dos parâmetros utilizados:
 ```
