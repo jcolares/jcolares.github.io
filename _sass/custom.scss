@@ -1,3 +1,9 @@
 /*- Custom style -*/
 
 // -- Put custom style under this point -- //
+
+code {
+  color: lighten($text-color, 35%);
+  background-color: lighten($background-color, 35%);
+  font-size: 12px;
+}
