@@ -28,11 +28,15 @@ Além dos dados dos voos, precisaremos de alguns arquivos XLS Apenas baixe esses
 Para carregar uma planilha, utilize o pacote readxl e a função read_excel(). Veja a linha de comando e, logo abaixo, a descrição dos parâmetros utilizados:
 ```
 library(readxl)
-aerodromos <- read_excel("github/data-wrangling/glossario_de_aerodromo.xls", skip = 3, col_names = TRUE )
+aerodromos <- read_excel("github/data-wrangling/glossario_de_aerodromo.xls", skip = 3, 
+  col_names = TRUE )
 ```
 O primeiro parâmetro é o caminho (e o nome) do arquivo. 
-*skip = 3* serve para indicar que as primeiras 3 linhas da planilha devem ser ignoradas
-*col_names = TRUE* indica que a primeira das linhas importadas contém os nomes das colunas
+
+*skip = 3* serve para indicar que as primeiras 3 linhas da planilha devem ser ignoradas.
+
+*col_names = TRUE* indica que a primeira das linhas importadas contém os nomes das colunas. 
+
 *sheet = NULL* esse parâmetro indica o nome da planilha dentro do arquivo. Se não for informado, como no nosso caso, é lida a primeira planilha.
 
 ### Visualizando os dados
@@ -42,9 +46,12 @@ View(aerodromos)
 ```
 Carregue as demais planilhas com os comandos abaixo:
 ```
-DI <- read_excel("github/data-wrangling/glossario_de_digito_identificador.xls", col_names = TRUE, skip = 3)
-empresas <- read_excel("github/data-wrangling/glossario_de_empresas_aereas.xls", col_names = TRUE, skip = 3)
-justificativas <- read_excel("github/data-wrangling/glossario_de_justificativas.xls", col_names = TRUE, skip = 3)
+DI <- read_excel("github/data-wrangling/glossario_de_digito_identificador.xls", 
+  col_names = TRUE, skip = 3)
+empresas <- read_excel("github/data-wrangling/glossario_de_empresas_aereas.xls", 
+  col_names = TRUE, skip = 3)
+justificativas <- read_excel("github/data-wrangling/glossario_de_justificativas.xls", 
+  col_names = TRUE, skip = 3)
 ```
 
 ### Arquivos CSV (ou TXT)
@@ -53,6 +60,11 @@ Para carregar um arquivo CSV, utilize o pacote readr e a função read_delim(), 
 library(readr)
 vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";")
 View(vra)
+```
+### Arquivos RData
+Os arquivos RData são criados no R e contém um ou mais objetos. Para carregá-los, use o comando *load()*:
+```
+load("github/data-wrangling/vra.RData")
 ```
 ## Selecionando a codificação correta
 Eventualmente, podem ocorrer erros de codificação do arquivo caso você esteja no Linux e seu CSV tiver sido criado no Windows ou vice-versa. Nesses casos, você pode acrescentar um parâmetro para evitar esse problema:
@@ -63,19 +75,16 @@ View(vra)
 ```
 Os tipos de encoding mais comuns são o "ISO-8859-1" e o "UTF-8".
 
-## Alterando o tipo de dados da coluna
+## Correção de problemas na carga de dados
 ### Tratamento de erros 
 Na importação do nosso arquivo 19 linhas não puderam ser importada e um *warning* com trechos mais ou menos assim foi exibido na tela:
 ```
 Warning: 19 parsing failures.
-1 32431 Código Autorização (DI) an integer B      'github/data-wrangling/VRA_do_MES_012017.csv' file 
-2 32432 Código Autorização (DI) an integer B      'github/data-wrangling/VRA_do_MES_012017.csv' row 
-3 32433 Código Autorização (DI) an integer B      'github/data-wrangling/VRA_do_MES_012017.csv' col 
-4 32434 Código Autorização (DI) an integer B      'github/data-wrangling/VRA_do_MES_012017.csv' expected 
-5 32435 Código Autorização (DI) an integer B      'github/data-wrangling/VRA_d [... truncated]
+1 32431 Código Autorização (DI) an integer B      
+'github/data-wrangling/VRA_do_MES_012017.csv' 
 ```
 Isso aconteceu porque em algumas das linhas, no campo *Código Autorização (DI)*, que é do tipo numérico, foi inserido um caractere "B".
-Existem duas interpretações e duas soluções correspondentes para esse problema: Se a letra "B" foi digitada por engano e puder ser descartada, não é necessário fazer nada (as demais colunas dessas linhas foram importadas normalmente). Se a letra B é uma entrada válida para esse campo e não deve ser descartada, então a coluna deve ser convertida para alfanumérica de forma que possa acomodar letras em seu conteudo. Nesse caso, precisamos mudar seu tipo. Para fazer isso, recarregue o arquivo, desta vez acrescentando o parãmetro adicional, como no exemplo a seguir:
+Existem duas interpretações e duas soluções correspondentes para esse problema: Se a letra "B" foi digitada por engano e puder ser descartada, não é necessário fazer nada (as demais colunas dessas linhas foram importadas normalmente). Se a letra B é uma entrada válida para esse campo e não deve ser descartada, então a coluna deve ser convertida para alfanumérica de forma que possa acomodar letras em seu conteudo. Nesse caso, precisamos mudar seu tipo. Para fazer isso, recarregue o arquivo, desta vez acrescentando um parâmetro adicional, como no exemplo a seguir:
 ```
 vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";", 
                   locale = locale(encoding = "ISO-8859-1")
@@ -83,17 +92,17 @@ vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";",
 View(vra)                  
 ```
 ### Tratamento de datas
-As colunas que contém datas e horas não são automaticamente interpretadas como tal. No nosso exemplo, as colunas *Partida Prevista*, *Partida Real*, *Chegada Prevista* e *Chegada Real* são tratadas como se seu conteúdo fosse texto simples. A princípio não há problema nisso e, por esse motivo, não foi exibido nenhum alerta durante a importação, mas se você posteriormente precisar fazer cálculos com essas datas, será necessário converter esses campos para o formato apropriado. Para fazer isso, acrescente os parâmetros adicionais como no exemplo abaixo:
+As colunas que contém datas e horas não são automaticamente interpretadas como tal. No nosso exemplo, as colunas *Partida Prevista*, *Partida Real*, *Chegada Prevista* e *Chegada Real* são tratadas como se seu conteúdo fosse texto simples. A princípio não há problema nisso e, por esse motivo, não foi exibido nenhum alerta durante a importação, mas se você posteriormente precisar fazer cálculos com essas datas, será necessário converter esses campos para o formato apropriado. Para fazer isso, acrescente parâmetros adicionais como no exemplo abaixo:
 ```
 vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";", 
-                  locale = locale(encoding = "ISO-8859-1"),
-                  col_types = cols("Código Autorização (DI)"= col_character(),
-                                   "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
-                                   )
-                  )
+locale = locale(encoding = "ISO-8859-1"),
+    col_types = cols("Código Autorização (DI)"= col_character(),
+                     "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                     "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                     "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                     "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
+                    )
+                )
 View(vra)
 ```
 ### Corrigindo caracteres indesejados
@@ -104,25 +113,25 @@ justificativas$"Descrição Justificativa" <- gsub('¿', '/', justificativas$"De
 
 ## Combinando múltiplos arquivos
 ### Unindo arquivos
-Os dados que estamos utilizando estão divididos em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises anuais. Se as colunas dos arquivos são semelhantes, podemos concatená-los com os comandos abaixo: 
+Os dados que estamos utilizando estão segmentados em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises que abrangem o período em todos os arquivos. Quando os nomes e tipos das colunas dos arquivos são semelhantes, podemos concatená-los como nos comandos abaixo: 
 ```
 vra02 <- read_delim("github/data-wrangling/VRA_do_MES_022017.csv", ";", 
-                  locale = locale(encoding = "ISO-8859-1"),
-                  col_types = cols("Código Autorização (DI)"= col_character(),
-                                   "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
-                                   )
+locale = locale(encoding = "ISO-8859-1"),
+     col_types = cols("Código Autorização (DI)"= col_character(),
+                      "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                      "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                      "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                      "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
+                      )
                   )
 vra03 <- read_delim("github/data-wrangling/VRA_do_MES_032017.csv", ";", 
-                  locale = locale(encoding = "ISO-8859-1"),
-                  col_types = cols("Código Autorização (DI)"= col_character(),
-                                   "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
-                                   "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
-                                   )
+locale = locale(encoding = "ISO-8859-1"),
+   col_types = cols("Código Autorização (DI)"= col_character(),
+                    "Partida Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                    "Partida Real" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                    "Chegada Prevista" = col_datetime(format = "%d/%m/%Y %H:%M"),
+                    "Chegada Real" = col_datetime(format = "%d/%m/%Y %H:%M")
+                    )
                   )
 vra <- rbind(vra, vra02, vra03)
 ```
@@ -139,7 +148,7 @@ vra <- rbind(vra, vra02, vra03)
 Obs.: Também é possível unir dois ou mais arquivos horizontalmente com a função *cbind()*, caso todas as suas colunas sejam diferentes. Isso pode ser útil para juntar em uma mesma tabela dados complementares. Porém fique atento para que cada arquivo tenha as linhas correspondentes entre si.
 
 ### Liberando espaço na memória
-Considerando que muitas vezes estaremos lidando com grandes volumes de dados, não faz muito sentido ficar ocupando espaço precioso de memória com coisas que não pretendemos mais usar. Para apagar um dataframe da memória, use o comando abaixo:
+Considerando que muitas vezes estaremos lidando com grandes volumes de dados, não faz muito sentido ficar ocupando espaço precioso de memória com coisas que não pretendemos mais usar. Para apagar um objeto da memória, siga o exemplo abaixo:
 ```
 rm(vra02)
 rm(vra03)
@@ -174,10 +183,10 @@ View(aerodromos)
 ```
 ## Join de dataframes
 
-Veja as regras gerais:
+Se você não estiver familiarizado com o conceito de join, antes de prosseguir dê uma lida [nesse artigo](https://www.devmedia.com.br/inner-cross-left-rigth-e-full-joins/21016). Caso contrário, veja a seguir como fazer as junções no R:
 
 ### Nomes de colunas
-Quando os dois datasetes têm colunas de nomes iguais, elas são mescladas automáticamente. Do contrário, use a notação by.x=nome-da-coluna, by.y=nome-da-coluna
+Quando os dois datasetes têm colunas de nomes iguais, elas são mescladas automaticamente. Do contrário, use a notação by.x=nome-da-coluna, by.y=nome-da-coluna
 
 ### Inner join
 teste <- merge(df1, df2)
@@ -194,8 +203,8 @@ teste <- merge(x = df1, y = df2, by = "nome-da-coluna", all.x = TRUE)
 ### Cross join
 teste <- merge(x = df1, y = df2, by = NULL)
 
-## Mesclando os dataframes do dataset de exemplo
-Para criar a partir de vra um dataframe que contenha não apenas os códigos, mas também as descrições dos aeródromos, justificativas e etc, execute os outer joins abaixo:
+## Juntando os dataframes do dataset de exemplo
+Para criar, a partir do *vra*, um dataframe que contenha não apenas os códigos, mas também as descrições dos aeródromos, justificativas e etc, execute os outer joins abaixo:
 ```
 vra <- merge(x = vra, y = empresas, by = "ICAO Empresa Aérea", all.x = TRUE)
 vra <- merge(x = vra, y = DI, by = "Código Autorização (DI)", all.x = TRUE)
@@ -204,7 +213,11 @@ View(vra)
 ```
 Os outer joins abaixo são ambos baseados no mesmo dataframe, então renomearemos alguns campos na sequência:
 ```
-vra <- merge(x = vra, y = aerodromos, by.x = "ICAO Aeródromo Origem", by.y = "ICAO Aeródromo", all.x = TRUE)
+vra <- merge(x = vra, 
+             y = aerodromos, 
+             by.x = "ICAO Aeródromo Origem", 
+             by.y = "ICAO Aeródromo", 
+             all.x = TRUE)
 colnames(vra)[colnames(vra)=="Descrição Aeródromo"] <- "Descrição Aeródromo Origem"
 colnames(vra)[colnames(vra)=="Cidade"] <- "Cidade Origem"
 colnames(vra)[colnames(vra)=="UF"] <- "UF Origem"
@@ -212,7 +225,11 @@ colnames(vra)[colnames(vra)=="País"] <- "País Origem"
 colnames(vra)[colnames(vra)=="Continente"] <- "Continente Origem"
 View(vra)
 
-vra <- merge(x = vra, y = aerodromos, by.x = "ICAO Aeródromo Destino", by.y = "ICAO Aeródromo", all.x = TRUE)
+vra <- merge(x = vra, 
+             y = aerodromos, 
+             by.x = "ICAO Aeródromo Destino", 
+             by.y = "ICAO Aeródromo", 
+             all.x = TRUE)
 colnames(vra)[colnames(vra)=="Descrição Aeródromo"] <- "Descrição Aeródromo Destino"
 colnames(vra)[colnames(vra)=="Cidade"] <- "Cidade Destino"
 colnames(vra)[colnames(vra)=="UF"] <- "UF Destino"
@@ -224,22 +241,30 @@ View(vra)
 
 ## Manipulando os dataframes
 ### Criando colunas calculadas
-É provável que, em muitos casos, surja a necessidade de criar uma coluna adicional contendo o resultado de um cálculo entre duas outras colunas. Quando isso ocorrer, você pode utilizar a função *mutate()*. Por exemplo, precisamos de uma nova coluna com a quantidade de minutos que o vôo atrasou na saída e uma outra com quantidade em minutos de atraso na chegada. Os comandos a seguir criam essas novas colunas. Observe que para calcular a diferença entre os horários de chegada e partida, utilizamos ainda a função *difftime()*, que dá a diferença em segundos, e dividimos o resultado por 60, para termos a diferença entre os horários em minutos:
+É provável que, em alguns casos, surja a necessidade de criar uma coluna adicional contendo o resultado de um cálculo entre outras colunas. Quando isso ocorrer, você pode utilizar a função *mutate()*. Em nosso cenário de exemplo, precisamos de uma nova coluna com a quantidade de minutos que o vôo atrasou na saída e uma outra com quantidade em minutos de atraso na chegada. Os comandos a seguir criam essas novas colunas. Observe que para calcular a diferença entre os horários de chegada e partida, utilizamos ainda a função *difftime()*, que fornece a diferença desejada em segundos, e dividimos o resultado por 60, para termos o tempo de atraso em minutos:
 ```
-vra <- mutate(vra, "Atraso Partida" = difftime(vra$"Partida Real" , vra$"Partida Prevista") / 60)
-vra <- mutate(vra, "Atraso Chegada" = difftime(vra$"Chegada Real" , vra$"Chegada Prevista") / 60)
+vra <- mutate(vra, "Atraso Partida" = difftime(vra$"Partida Real" , 
+                                               vra$"Partida Prevista") / 60)
+vra <- mutate(vra, "Atraso Chegada" = difftime(vra$"Chegada Real" , 
+                                               vra$"Chegada Prevista") / 60)
 ```
 ### Removendo uma coluna
-Para remover uma coluna, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas. Ex: o comando abaixo retorna o dataset sem as colunas "Atraso Partida" e "Atraso Chegada":
+Para remover uma coluna, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas:
 ```
-select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)","Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino","Partida Prevista","Partida Real","Chegada Prevista","Chegada Real" ,"Situação Voo","Código Justificativa")
+select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)",
+           "Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino",
+           "Partida Prevista","Partida Real","Chegada Prevista","Chegada Real",
+           "Situação Voo","Código Justificativa")
 ```
-para remover as colunas e armazenar o resultado, atribua-o a um objeto:
+O comando acima não armazena o resultado fornecido. Para fazer isso, atribua-o a um objeto. Pode ser o mesmo objeto original ou outro:
 ```
-vra <- select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)","Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino","Partida Prevista","Partida Real","Chegada Prevista","Chegada Real" ,"Situação Voo","Código Justificativa")
+vra1 <- select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)",
+           "Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino",
+           "Partida Prevista","Partida Real","Chegada Prevista","Chegada Real",
+           "Situação Voo","Código Justificativa")
 ```
 ### Filtrando linhas
-Assim como as colunas, você pode remover linhas indesejadas do seu dataset. Para isso, utilize a função *filter()*
+Assim como as colunas, você pode remover linhas indesejadas do seu dataset. Para isso, utilize a função *filter()*.
 Por exemplo, para ver (e remover) as linhas com o comando abaixo:
 ```
 filter(vra, `ICAO Aeródromo Origem`=="CYYZ")
@@ -249,6 +274,8 @@ Para remover, armazene no objeto original todas as linhas diferentes das que for
 vra1 <- filter(vra, `ICAO Aeródromo Origem`!="CYYZ")
 ```
 ## Conclusão 
-O objetivo da preparação de dados (data wrangling) é deixar os dados prontos para a fase de exploração de dados. Esse post mostra apenas as transformações mais comuns, mas existem diversas outras. Os pacotes dplyr e tidyr possuem diversas funções específicas para essa etapa do processamento. 
+O objetivo da preparação de dados (data wrangling) é deixar os dados prontos para a fase de exploração de dados. Esse post mostra apenas as transformações mais comuns, mas existem diversas outras. Os pacotes dplyr e tidyr possuem diversas outras funções específicas para essa etapa do processamento.
+
 Uma boa forma de aprender outras técnicas é assistindo o ótimo webinar [Data Wrangling with R e RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/), de Garret Grolemund. Vale a pena dar uma olhada.
+
 
