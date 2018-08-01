@@ -1,9 +1,20 @@
 /*- Custom style -*/
 
 // -- Put custom style under this point -- //
+html {
+	background-color: $background-color;
+	font-size: 16px;
+	@media (min-width: 940px) {
+		font-size: 16px;
+	}
+	line-height: 1.5;
+	color: $text-color;
+}
 
 code {
   color: lighten($text-color, 35%);
   background-color: lighten($background-color, 35%);
   font-size: 12px;
 }
+
+
