@@ -1,9 +1,9 @@
 ---
 title: Preparação de dados com R 
 ---
-A atividade de coletar e preparar dados para análise consome cerca de 50% a 80% do tempo do cientista de dados. Este guia rápido tem o objetivo de agilizar esse processo, compilando no mesmo local uma lista de técnicas de manipulação de dados úteis. Você também pode usá-lo como um tutorial, se você seguir os exemplos desde o início.
+A atividade de coletar e preparar dados para análise consome cerca de 50% a 80% do tempo do cientista de dados. Este guia rápido tem o objetivo de agilizar esse processo, compilando no mesmo local uma lista de técnicas de manipulação de dados úteis. Você também pode usá-lo como um tutorial, se seguir os exemplos desde o início.
 
-## Pré Requisitos
+## Pré-requisitos
 ### R e RStudio
 Se você ainda não tem o R ou o RStudio instalados em sua máquina, siga as instruções [neste site](http://leg.ufpr.br/~fernandomayer/aulas/ce083-2016-2/R-instalacao.html) para colocar tudo em ordem antes de começar.
 
@@ -25,7 +25,7 @@ Além dos dados dos voos, precisaremos de alguns arquivos XLS Apenas baixe esses
 
 ## Carregando dados de arquivos
 ### Arquivos XLS (ou XLSX)
-Para carregar uma planilha, utilize o pacote readxl e a função read_excel(). Veja a linha de comando e, logo abaixo, a descrição dos parâmetros utilizados:
+Para carregar uma planilha, utilize o pacote *readxl* e a função *read_excel()*. Veja a linha de comando e, logo abaixo, a descrição dos parâmetros utilizados:
 ```
 library(readxl)
 aerodromos <- read_excel("github/data-wrangling/glossario_de_aerodromo.xls", skip = 3, 
@@ -55,19 +55,19 @@ justificativas <- read_excel("github/data-wrangling/glossario_de_justificativas.
 ```
 
 ### Arquivos CSV (ou TXT)
-Para carregar um arquivo CSV, utilize o pacote readr e a função read_delim(), especificando o ";" como delimitador de colunas do arquivo:
+Para carregar um arquivo CSV, utilize o pacote *readr* e a função *read_delim()*, especificando o ";" como delimitador de colunas do arquivo:
 ```
 library(readr)
 vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";")
 View(vra)
 ```
 ### Arquivos RData
-Os arquivos RData são criados no R e contém um ou mais objetos. Para carregá-los, use o comando *load()*:
+Os arquivos RData são criados no R e podem conter um ou mais objetos. Para carregá-los, use o comando *load()*:
 ```
 load("github/data-wrangling/vra.RData")
 ```
 ## Selecionando a codificação correta
-Eventualmente, podem ocorrer erros de codificação do arquivo caso você esteja no Linux e seu CSV tiver sido criado no Windows ou vice-versa. Nesses casos, você pode acrescentar um parâmetro para evitar esse problema:
+Eventualmente, podem ocorrer erros de codificação do arquivo caso você esteja no Linux e seu CSV tiver sido criado no Windows ou vice-versa. Nesses casos, você pode acrescentar um parâmetro que evita esse problema:
 ```
 vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";", 
                   locale = locale(encoding = "ISO-8859-1"))
@@ -77,7 +77,7 @@ Os tipos de encoding mais comuns são o "ISO-8859-1" e o "UTF-8".
 
 ## Correção de problemas na carga de dados
 ### Tratamento de erros 
-Na importação do nosso arquivo 19 linhas não puderam ser importada e um *warning* com trechos mais ou menos assim foi exibido na tela:
+Na importação do nosso arquivo 19 linhas não puderam ser importadas e um *warning* foi exibido na tela com trechos semelhantes a esses:
 ```
 Warning: 19 parsing failures.
 1 32431 Código Autorização (DI) an integer B      
@@ -113,7 +113,7 @@ justificativas$"Descrição Justificativa" <- gsub('¿', '/', justificativas$"De
 
 ## Combinando múltiplos arquivos
 ### Unindo arquivos
-Os dados que estamos utilizando estão segmentados em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises que abrangem o período em todos os arquivos. Quando os nomes e tipos das colunas dos arquivos são semelhantes, podemos concatená-los como nos comandos abaixo: 
+Os dados que estamos utilizando estão segmentados em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises abrangendo o período completo. Quando os nomes e tipos das colunas dos arquivos são semelhantes, podemos concatená-los como nos comandos abaixo: 
 ```
 vra02 <- read_delim("github/data-wrangling/VRA_do_MES_022017.csv", ";", 
 locale = locale(encoding = "ISO-8859-1"),
@@ -249,7 +249,7 @@ vra <- mutate(vra, "Atraso Chegada" = difftime(vra$"Chegada Real" ,
                                                vra$"Chegada Prevista") / 60)
 ```
 ### Removendo uma coluna
-Para remover uma coluna, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas:
+Para remover uma ou mais colunas, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas:
 ```
 select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)",
            "Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino",
@@ -269,12 +269,12 @@ Por exemplo, para ver (e remover) as linhas com o comando abaixo:
 ```
 filter(vra, `ICAO Aeródromo Origem`=="CYYZ")
 ```
-Para remover, armazene no objeto original todas as linhas diferentes das que foram listadas
+Para remover, armazene no objeto original todas as linhas diferentes das que foram listadas anteriormente.
 ```
 vra1 <- filter(vra, `ICAO Aeródromo Origem`!="CYYZ")
 ```
 ## Conclusão 
-O objetivo da preparação de dados (data wrangling) é deixar os dados prontos para a fase de exploração de dados. Esse post mostra apenas as transformações mais comuns, mas existem diversas outras. Os pacotes dplyr e tidyr possuem diversas outras funções específicas para essa etapa do processamento.
+O objetivo da preparação de dados (data wrangling) é deixar os dados prontos para a fase de análise exploratória. Esse post mostra apenas algumas transformações mais comuns, mas existem diversas outras. Os pacotes dplyr e tidyr possuem diversas outras funções específicas para essa etapa do processamento.
 
 Uma boa forma de aprender outras técnicas é assistindo o ótimo webinar [Data Wrangling with R e RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/), de Garret Grolemund. Vale a pena dar uma olhada.
 
