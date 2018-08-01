@@ -1,9 +1,7 @@
 ---
-title: Preparação de dados com R e Rstudio
+title: Preparação de dados com R 
 ---
 A atividade de coletar e preparar dados para análise consome cerca de 50% a 80% do tempo do cientista de dados. Este guia rápido tem o objetivo de agilizar esse processo, compilando no mesmo local uma lista de técnicas de manipulação de dados úteis. Você também pode usá-lo como um tutorial, se você seguir os exemplos desde o início.
-
-Quase tudo aqui veio do excelente webinar [Data Wrangling with R e RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/), de Garret Grolemund, que você poderá conferir se precisar de mais detalhes.
 
 ## Pré Requisitos
 ### R e RStudio
@@ -99,7 +97,7 @@ vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";",
 View(vra)
 ```
 ### Corrigindo caracteres indesejados
-No arquivo original de justificativas () o caractere "/" foi erroneamente representado como "¿". na variável *Descrição da Justificativa*. Para substituir todos os "¿" por "/", execute o comando abaixo:
+No arquivo original de justificativas (glossario_de_justificativas.xls) o caractere "/" foi erroneamente representado como "¿". na variável *Descrição da Justificativa*. Para substituir todos os "¿" por "/", execute o comando abaixo:
 ```
 justificativas$"Descrição Justificativa" <- gsub('¿', '/', justificativas$"Descrição Justificativa")
 ```
@@ -250,3 +248,7 @@ Para remover, armazene no objeto original todas as linhas diferentes das que for
 ```
 vra1 <- filter(vra, `ICAO Aeródromo Origem`!="CYYZ")
 ```
+## Conclusão 
+O objetivo da preparação de dados (data wrangling) é deixar os dados prontos para a fase de exploração de dados. Esse post mostra apenas as transformações mais comuns, mas existem diversas outras. Os pacotes dplyr e tidyr possuem diversas funções específicas para essa etapa do processamento. 
+Uma boa forma de aprender outras técnicas é assistindo o ótimo webinar [Data Wrangling with R e RStudio](https://www.rstudio.com/resources/webinars/data-wrangling-with-r-and-rstudio/), de Garret Grolemund. Vale a pena dar uma olhada.
+
