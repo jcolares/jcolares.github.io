@@ -98,6 +98,12 @@ vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";",
                   )
 View(vra)
 ```
+### Corrigindo caracteres indesejados
+No arquivo original de justificativas () o caractere "/" foi erroneamente representado como "¿". na variável *Descrição da Justificativa*. Para substituir todos os "¿" por "/", execute o comando abaixo:
+```
+justificativas$"Descrição Justificativa" <- gsub('¿', '/', justificativas$"Descrição Justificativa")
+```
+
 ## Combinando múltiplos arquivos
 ### Unindo arquivos
 Os dados que estamos utilizando estão divididos em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises anuais. Se as colunas dos arquivos são semelhantes, podemos concatená-los com os comandos abaixo: 
@@ -168,6 +174,56 @@ colnames(aerodromos)[colnames(aerodromos)=="Aeródromo"] <- "ICAO Aeródromo"
 colnames(aerodromos)[colnames(aerodromos)=="Descrição"] <- "Descrição Aeródromo"
 View(aerodromos)
 ```
+## Join de dataframes
+
+Veja as regras gerais:
+
+### Nomes de colunas
+Quando os dois datasetes têm colunas de nomes iguais, elas são mescladas automáticamente. Do contrário, use a notação by.x=nome-da-coluna, by.y=nome-da-coluna
+
+### Inner join
+teste <- merge(df1, df2)
+
+### Left outer join
+teste <- merge(x = df1, y = df2, by = "nome-da-coluna", all.x = TRUE)
+
+### Right outer join
+teste <- merge(x = df1, y = df2, by = "nome-da-coluna", all.y = TRUE)
+
+### Left outer join
+teste <- merge(x = df1, y = df2, by = "nome-da-coluna", all.x = TRUE)
+
+### Cross join
+teste <- merge(x = df1, y = df2, by = NULL)
+
+## Mesclando os dataframes do dataset de exemplo
+Para criar a partir de vra um dataframe que contenha não apenas os códigos, mas também as descrições dos aeródromos, justificativas e etc, execute os outer joins abaixo:
+```
+vra <- merge(x = vra, y = empresas, by = "ICAO Empresa Aérea", all.x = TRUE)
+vra <- merge(x = vra, y = DI, by = "Código Autorização (DI)", all.x = TRUE)
+vra <- merge(x = vra, y = justificativas, by = "Código Justificativa", all.x = TRUE)
+View(vra)
+```
+Os outer joins abaixo são ambos baseados no mesmo dataframe, então renomearemos alguns campos na sequência:
+```
+vra <- merge(x = vra, y = aerodromos, by.x = "ICAO Aeródromo Origem", by.y = "ICAO Aeródromo", all.x = TRUE)
+colnames(vra)[colnames(vra)=="Descrição Aeródromo"] <- "Descrição Aeródromo Origem"
+colnames(vra)[colnames(vra)=="Cidade"] <- "Cidade Origem"
+colnames(vra)[colnames(vra)=="UF"] <- "UF Origem"
+colnames(vra)[colnames(vra)=="País"] <- "País Origem"
+colnames(vra)[colnames(vra)=="Continente"] <- "Continente Origem"
+View(vra)
+
+vra <- merge(x = vra, y = aerodromos, by.x = "ICAO Aeródromo Destino", by.y = "ICAO Aeródromo", all.x = TRUE)
+colnames(vra)[colnames(vra)=="Descrição Aeródromo"] <- "Descrição Aeródromo Destino"
+colnames(vra)[colnames(vra)=="Cidade"] <- "Cidade Destino"
+colnames(vra)[colnames(vra)=="UF"] <- "UF Destino"
+colnames(vra)[colnames(vra)=="País"] <- "País Destino"
+colnames(vra)[colnames(vra)=="Continente"] <- "Continente Destino"
+View(vra)
+```
+
+
 ## Manipulando os dataframes
 ### Criando colunas calculadas
 É provável que, em muitos casos, surja a necessidade de criar uma coluna adicional contendo o resultado de um cálculo entre duas outras colunas. Quando isso ocorrer, você pode utilizar a função *mutate()*. Por exemplo, precisamos de uma nova coluna com a quantidade de minutos que o vôo atrasou na saída e uma outra com quantidade em minutos de atraso na chegada. Os comandos a seguir criam essas novas colunas. Observe que para calcular a diferença entre os horários de chegada e partida, utilizamos ainda a função *difftime()*, que dá a diferença em segundos, e dividimos o resultado por 60, para termos a diferença entre os horários em minutos:
