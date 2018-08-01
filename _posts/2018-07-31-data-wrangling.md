@@ -10,21 +10,50 @@ Quase tudo aqui veio do excelente webinar [Data Wrangling with R e RStudio](http
 Se você ainda não tem o R ou o RStudio instalados em sua máquina, siga as instruções [neste site](http://leg.ufpr.br/~fernandomayer/aulas/ce083-2016-2/R-instalacao.html) para colocar tudo em ordem antes de começar.
 
 ## Bibliotecas necessárias
-Boa parte das atividades utiliza funções dos pacotes [tidyr](https://cran.r-project.org/web/packages/tidyr/README.html), [readr](https://cran.r-project.org/web/packages/readr/README.html) e [dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html). Você precisa instalá-los para conseguir executar o código de exemplo.
+Boa parte das atividades utiliza funções dos pacotes abaixo. Você precisará instalá-los para conseguir executar o código de exemplo:
+[tidyr](https://cran.r-project.org/web/packages/tidyr/README.html) 
+[readr](https://cran.r-project.org/web/packages/readr/README.html)
+[readxl](https://readxl.tidyverse.org/reference/read_excel.html)
+[dplyr](https://www.r-project.org/nosvn/pandoc/dplyr.html). 
 
 ## Dataset de exemplo
 O dataset utilizado para todos os exemplos é o VRA, que contém o histórico de voos registrados pela ANAC. Ele pode ser obtido [nesse endereço](http://www.anac.gov.br/assuntos/dados-e-estatisticas/historico-de-voos). Só é necessário baixar os arquivos correspondentes aos meses de [janeiro](http://www.anac.gov.br/assuntos/dados-e-estatisticas/base-historica-1/vra/2017/VRA_do_MS_012017.zip), [fevereiro](http://www.anac.gov.br/assuntos/dados-e-estatisticas/base-historica-1/vra/2017/VRA_do_MS_022017.zip) e [março](Março) de 2017 e descompactar todos na mesma pasta.
+Além dos dados dos voos, precisaremos de alguns arquivos XLS Apenas baixe esses arquivos na mesma pasta que os anteriores:
+[Nomes das empresas aéreas](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_empresas_aereas.xls)
+[Nomes dos aeroportos.](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_aerodromo.xls)
+[Nomes dos Dígitos Identificadores (tipos de autorização)](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_digito_identificador.xls)
+[Nomes dos Tipos de Linha (Natureza)](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_tipo_de_linha.xls)
+[Nomes das justificativas de atrasos](http://www.anac.gov.br/assuntos/dados-e-estatisticas/vra/glossario_de_justificativas.xls)
 
 # Carregando dados para o R
-## Sintaxe Básica
-Para carregar um arquivo CSV, utilize a biblioteca reader e a função read_delim(), especificando o ";" como delimitador de colunas do arquivo:
+## Arquivos XLS (ou XLSX)
+Para carregar uma planilha, utilize o pacote readxl e a função read_excel(). Veja a linha de comando e, logo abaixo, a descrição dos parâmetros utilizados:
 ```
-library(readr)
-vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";")
+library(readxl)
+aerodromos <- read_excel("github/data-wrangling/glossario_de_aerodromo.xls", skip = 3, col_names = TRUE )
 ```
+O primeiro parâmetro é o caminho (e o nome) do arquivo. 
+*skip = 3* serve para indicar que as primeiras 3 linhas da planilha devem ser ignoradas
+*col_names = TRUE* indica que a primeira das linhas importadas contém os nomes das colunas
+*sheet = NULL* esse parâmetro indica o nome da planilha dentro do arquivo. Se não for informado, como no nosso caso, é lida a primeira planilha.
+
 ## Visualizando os dados
 Para visualizar os dados, use o comando abaixo. Atenção para a inicial que deve ser maiúscula.
 ```
+View(aerodromos)
+```
+Carregue as demais planilhas com os comandos abaixo:
+```
+DI <- read_excel("github/data-wrangling/glossario_de_digito_identificador.xls", col_names = TRUE, skip = 3)
+empresas <- read_excel("github/data-wrangling/glossario_de_empresas_aereas.xls", col_names = TRUE, skip = 3)
+justificativas <- read_excel("github/data-wrangling/glossario_de_justificativas.xls", col_names = TRUE, skip = 3)
+```
+
+## Arquivos CSV (ou TXT)
+Para carregar um arquivo CSV, utilize o pacote readr e a função read_delim(), especificando o ";" como delimitador de colunas do arquivo:
+```
+library(readr)
+vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";")
 View(vra)
 ```
 # Selecionando a codificação correta
@@ -69,7 +98,8 @@ vra <- read_delim("github/data-wrangling/VRA_do_MES_012017.csv", ";",
                   )
 View(vra)
 ```
-# Agrupando dados de diferentes arquivos
+# Combinando múltiplos arquivos
+## Unindo arquivos
 Os dados que estamos utilizando estão divididos em um arquivo CSV para cada mês. Queremos unir todos esses arquivos em um único dataframe para podermos fazer análises anuais. Se as colunas dos arquivos são semelhantes, podemos concatená-los com os comandos abaixo: 
 ```
 vra02 <- read_delim("github/data-wrangling/VRA_do_MES_022017.csv", ";", 
@@ -92,7 +122,7 @@ vra03 <- read_delim("github/data-wrangling/VRA_do_MES_032017.csv", ";",
                   )
 vra <- rbind(vra, vra02, vra03)
 ```
-Se uma das colunas for diferente em um dos arquivos, o rbind() acima não funcionará. Em nosso exemplo, isso ocorre com a coluna "Código Justificativa", que no vra03 tem o nome "CódigoJustificativa". Para renomeá-la, digite o comando abaixo:
+Se uma das colunas tiver o nome ou tipo de dados diferente em um dos arquivos, o rbind() acima não funcionará. Um exemplo disso ocorre com a coluna "Código Justificativa", que no vra03 tem o nome "CódigoJustificativa". Para renomeá-la, digite o comando abaixo:
 ```
 colnames(vra03)[colnames(vra03)=="CódigoJustificativa"] <- "Código Justificativa"
 
@@ -101,6 +131,8 @@ Agora é possível fazer o rbind():
 ```
 vra <- rbind(vra, vra02, vra03)
 ```
+Obs.: Também é possível unir dois ou mais arquivos horizontalmente com a função *cbind()*, caso todas as suas colunas sejam diferentes. Isso pode ser útil para juntar em uma mesma tabela dados complementares. Porém fique atento para que cada arquivo tenha as linhas correspondentes entre si.
+
 ## Liberando espaço na memória
 Considerando que muitas vezes estaremos lidando com grandes volumes de dados, não faz muito sentido ficar ocupando espaço precioso de memória com coisas que não pretendemos mais usar. Para apagar um dataframe da memória, use o comando abaixo:
 ```
