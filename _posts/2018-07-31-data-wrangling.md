@@ -122,6 +122,7 @@ vra03 <- read_delim("github/data-wrangling/VRA_do_MES_032017.csv", ";",
                   )
 vra <- rbind(vra, vra02, vra03)
 ```
+## Renomeando colunas
 Se uma das colunas tiver o nome ou tipo de dados diferente em um dos arquivos, o rbind() acima não funcionará. Um exemplo disso ocorre com a coluna "Código Justificativa", que no vra03 tem o nome "CódigoJustificativa". Para renomeá-la, digite o comando abaixo:
 ```
 colnames(vra03)[colnames(vra03)=="CódigoJustificativa"] <- "Código Justificativa"
@@ -139,5 +140,56 @@ Considerando que muitas vezes estaremos lidando com grandes volumes de dados, n�
 rm(vra02)
 rm(vra03)
 ```
-
-
+# Manipulando os dados
+## Criando colunas calculadas
+É provável que, em muitos casos, surja a necessidade de criar uma coluna adicional contendo o resultado de um cálculo entre duas outras colunas. Quando isso ocorrer, você pode utilizar a função *mutate()*. Por exemplo, precisamos de uma nova coluna com a quantidade de minutos que o vôo atrasou na saída e uma outra com quantidade em minutos de atraso na chegada. Os comandos a seguir criam essas novas colunas. Observe que para calcular a diferença entre os horários de chegada e partida, utilizamos ainda a função *difftime()*, que dá a diferença em segundos, e dividimos o resultado por 60, para termos a diferença entre os horários em minutos:
+```
+vra <- mutate(vra, "Atraso Partida" = difftime(vra$"Partida Real" , vra$"Partida Prevista") / 60)
+vra <- mutate(vra, "Atraso Chegada" = difftime(vra$"Chegada Real" , vra$"Chegada Prevista") / 60)
+```
+## Removendo uma coluna
+Para remover uma coluna, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas. Ex: o comando abaixo retorna o dataset sem as colunas "Atraso Partida" e "Atraso Chegada":
+```
+select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)","Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino","Partida Prevista","Partida Real","Chegada Prevista","Chegada Real" ,"Situação Voo","Código Justificativa")
+```
+para remover as colunas e armazenar o resultado, atribua-o a um objeto:
+```
+vra <- select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)","Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino","Partida Prevista","Partida Real","Chegada Prevista","Chegada Real" ,"Situação Voo","Código Justificativa")
+```
+# Filtrando linhas
+Assim como as colunas, você pode remover linhas indesejadas do seu dataset. Para isso, utilize a função *filter()*
+Por exemplo, para ver (e remover) as linhas com o comando abaixo:
+```
+filter(vra, `ICAO Aeródromo Origem`=="CYYZ")
+```
+Para remover, armazene no objeto original todas as linhas diferentes das que foram listadas
+```
+vra1 <- filter(vra, `ICAO Aeródromo Origem`!="CYYZ")
+```
+### Organizando o layout dos dataframes
+Vamos agora executar os comandos abaixo e deixar os dataframes organizados para os próximos passos:
+**empresas**
+```
+colnames(empresas)[colnames(empresas)=="Sigla OACI"] <- "ICAO Empresa Aérea"
+colnames(empresas)[colnames(empresas)=="Nome Empresas"] <- "Empresa"
+colnames(empresas)[colnames(empresas)=="Nacional ou Estrangeira"] <- "Nacionalidade"
+empresas <- select(empresas, "ICAO Empresa Aérea", "Empresa", "Nacionalidade")
+View(empresas)
+```
+**DI** 
+```
+colnames(DI)[colnames(DI)=="Código"] <- "Código Autorização (DI)"
+colnames(DI)[colnames(DI)=="Descrição"] <- "Tipo de Voo"
+View(DI)
+```
+**justificativas** 
+```
+colnames(justificativas)[colnames(justificativas)=="Sigla Justificativa"] <- "Código Justificativa"
+View(justificativas)
+```
+**aerodromos** 
+```
+colnames(aerodromos)[colnames(aerodromos)=="Aeródromo"] <- "ICAO Aeródromo"
+colnames(aerodromos)[colnames(aerodromos)=="Descrição"] <- "Descrição Aeródromo"
+View(aerodromos)
+```
