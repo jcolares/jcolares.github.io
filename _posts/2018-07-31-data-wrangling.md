@@ -241,12 +241,14 @@ View(vra)
 
 ## Manipulando os dataframes
 ### Criando colunas calculadas
-É provável que, em alguns casos, surja a necessidade de criar uma coluna adicional contendo o resultado de um cálculo entre outras colunas. Quando isso ocorrer, você pode utilizar a função *mutate()*. Em nosso cenário de exemplo, precisamos de uma nova coluna com a quantidade de minutos que o vôo atrasou na saída e uma outra com quantidade em minutos de atraso na chegada. Os comandos a seguir criam essas novas colunas. Observe que para calcular a diferença entre os horários de chegada e partida, utilizamos ainda a função *difftime()*, que fornece a diferença desejada em segundos, e dividimos o resultado por 60, para termos o tempo de atraso em minutos:
+É provável que, em alguns casos, surja a necessidade de criar uma coluna adicional contendo o resultado de um cálculo entre outras colunas. Quando isso ocorrer, você pode utilizar a função *mutate()*. Em nosso cenário de exemplo, precisamos de uma nova coluna com a quantidade de minutos que o vôo atrasou na saída e uma outra com quantidade em minutos de atraso na chegada. Os comandos a seguir criam essas novas colunas. Observe que para calcular a diferença entre os horários de chegada e partida, utilizamos ainda a função *difftime()* com o parâmetro *units="mins"* que fornece a diferença desejada em minutos:
 ```
 vra <- mutate(vra, "Atraso Partida" = difftime(vra$"Partida Real" , 
-                                               vra$"Partida Prevista") / 60)
+                                               vra$"Partida Prevista", 
+                                               units = "mins"))
 vra <- mutate(vra, "Atraso Chegada" = difftime(vra$"Chegada Real" , 
-                                               vra$"Chegada Prevista") / 60)
+                                               vra$"Chegada Prevista",
+                                               units = "mins"))
 ```
 ### Removendo uma coluna
 Para remover uma ou mais colunas, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas:
