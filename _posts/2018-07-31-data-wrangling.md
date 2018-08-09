@@ -251,14 +251,19 @@ vra <- mutate(vra, "Atraso Chegada" = difftime(vra$"Chegada Real" ,
                                                units = "mins"))
 ```
 ### Removendo uma coluna
-Para remover uma ou mais colunas, utilize a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas:
+Para remover uma ou mais colunas atribua a ela NULL como no exemplo abaixo:
+```
+vra$`Atraso Chegada` <- NULL
+```
+
+Para remover uma ou mais colunas, você também pode utilizar a função *select()*. Ela retorna um novo dataset apenas com as colunas especificadas:
 ```
 select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)",
            "Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino",
            "Partida Prevista","Partida Real","Chegada Prevista","Chegada Real",
            "Situação Voo","Código Justificativa")
 ```
-O comando acima não armazena o resultado fornecido. Para fazer isso, atribua-o a um objeto. Pode ser o mesmo objeto original ou outro:
+O comando acima não armazena o resultado fornecido. Para fazer isso, atribua-o a um objeto. Pode ser o mesmo objeto original ou pode ser outro:
 ```
 vra1 <- select(vra,"ICAO Empresa Aérea","Número Voo","Código Autorização (DI)",
            "Código Tipo Linha","ICAO Aeródromo Origem" ,"ICAO Aeródromo Destino",
