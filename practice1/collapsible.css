@@ -1,0 +1,317 @@
+/*@import url(https://use.fontawesome.com/releases/v5.0.6/css/all.css); */ 
+
+:root {
+    --cor-01: #8f4522;
+    --cor-02: #cd7b4c;
+    --cor-03: #ffa86e;
+    --cor-04: #ffbd7f;
+    --cor-05: #fede8e;
+  }
+
+
+#home {
+    --first-color: #674ea7;
+    --second-color: #f4e767;    
+    --light-gray: lightgray;
+}
+
+#next {
+    --first-color: tomato;
+    --second-color: deepskyblue;    
+    --light-gray: lightgray;
+}
+
+html {
+    padding: 0;
+    height: 100%;
+    margin: 0px;
+    /*overflow: hidden;*/
+    overflow-y: scroll;
+}
+
+body {
+    display: flex;
+    padding: 0;
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+}
+
+/* Collapsible menu properties */
+#offcanvas-left,
+#offcanvas-right {
+    flex: 0 0 280px;
+    background-color: #111;
+    color: white;
+    transition-duration: .5s;
+}
+#offcanvas-left.hide {
+    margin-left: -280px;
+}
+#offcanvas-right.hide {
+    margin-right: -280px;
+}
+.togglebar {
+    background-color: #232323;
+    flex: 0 0;
+    min-width: 50px;
+    max-width: 5px;
+}
+
+.toggle i {
+    height: 80px;
+    font-size: 1.4em;
+    width: 100%;
+    color: var(--first-color);
+    display: flex;   
+    align-items: center;
+    justify-content: center;
+    background-color: #111;
+}
+.toggle i:hover {
+    color: var(--second-color);
+}
+
+#offcanvas-left ul,
+#offcanvas-right ul {
+    padding: 0
+}
+#offcanvas-left ul li,
+#offcanvas-right ul li {
+    color: white;
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+    padding: 10px; 
+    border-bottom: 1px solid #222
+    
+}
+#offcanvas-left a,
+#offcanvas-right a {
+    color: white;
+    text-decoration: none;
+}
+
+#offcanvas-left li:hover a,
+#offcanvas-right li:hover a {
+    color: var(--first-color);
+}
+
+
+
+
+/* Area central da tela*/ 
+.center {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 95%;
+}
+.center header {
+    background-color: var(--first-color);
+    color: white;
+}
+
+/* Top header */
+header {
+    background-color: var(--cor-01);
+    flex: 0 0 10%;
+    color: white;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+
+section {
+    flex: 1 1 auto;
+    flex-direction: row;
+    height: 70%;
+    justify-content: top;
+    justify-content: center;
+}
+
+.center section {
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+
+
+main {
+    flex-grow: 1;
+    flex-basis: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    overflow: auto;
+}
+
+header {
+    background-color: var(--cor-01);
+    flex: 0 0 10%;
+    color: white;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+/* HEADER NAVIGATION 
+nav {
+    background-color: transparent 
+}
+center > header > nav > ul {
+    display: flex;
+    width: auto;
+    justify-content: space-between;
+    justify-content: center;
+    justify-content: space-evenly;
+    padding-inline-start: 0px;
+}
+center > header > nav > ul > li {
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+    display: inline-flex;
+
+}
+center > header > nav > ul > li > a {
+    text-decoration: none;
+    color: white;
+    font-size: 12px;
+}
+center > header > nav > ul > li > a:hover {
+    text-decoration: underline;
+}
+*/
+
+/* GENERAL NAVIGATION Properties */ 
+nav {
+    background-color: transparent;
+}
+nav > ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+}
+nav > ul > li{
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+    display: inline-flex;
+    padding: 10px;
+}
+nav > ul > li > a {
+    text-decoration: none;
+}
+nav > ul > li > a:hover {
+    text-decoration: underline;
+}
+
+
+
+/* COLLAPSIBLE NAVIGATION Properties */ 
+#offcanvas-left > nav {
+    background-color: transparent;
+}
+#offcanvas-left > nav > ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+#offcanvas-left > nav > ul > li{
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+    display: inline-flex;
+    padding: 10px;
+}
+#offcanvas-left > nav > ul > li > a {
+    text-decoration: none;
+}
+#offcanvas-left > nav > ul > li > a:hover {
+    text-decoration: underline;
+}
+
+
+
+footer {
+    background-color: var(--cor-01);
+    flex: 0 0 40px;
+    color: white;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+article {
+    width: 96%;
+    border-radius: 5px;
+    background-color: var(--cor-03);
+    align-items: left;
+    justify-content: left;
+    padding: 2%;
+    margin-bottom: 2%; 
+    text-align: justify;
+
+    flex-direction: column;
+    justify-content: top;
+    justify-content: center;
+}
+
+article > article-row{
+    padding: 1%;
+    text-align: justify;
+}
+
+article > img {
+    width: 100%;
+}
+
+aside {
+    background-color: var(--cor-04);
+    height: 100%;
+    flex-grow: 0;
+    flex-basis: 30%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+header,
+section,
+footer,
+article {
+    display: flex;
+}
+
+header,
+footer {
+    font-weight: bold;
+}
+
+
+/*
+#offcanvas-left,
+#offcanvas-right,
+header,
+body > section,
+footer,
+main article {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+#offcanvas-left,
+#offcanvas-right,
+footer,
+header,
+main article {
+    align-items: center;
+}
+*/
