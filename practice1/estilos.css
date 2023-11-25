@@ -24,7 +24,7 @@ body {
 section {
     flex: 1 1 auto;
     flex-direction: row;
-    height: 100%;
+    height: 70%;
     justify-content: top;
     justify-content: center;
 }
@@ -40,55 +40,32 @@ main {
 
 header {
     background-color: var(--cor-01);
-    flex: 0 0 40px;
+    flex: 0 0 10%;
     color: white;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+
 }
 
-
-/* HEADER NAVIGATION 
-header > nav {
-    background-color: transparent;
-}
-header > nav > ul {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-}
-header > nav > ul > li {
-    list-style-type: none;
-    padding-left: 0;
-    margin-left: 0;
-    display: inline-flex;
-    padding: 10px;
-}
-header > nav > ul > li > a {
-    text-decoration: none;
-    color: white;
-    font-size: 12px;
-}
-header > nav > ul > li > a:hover {
-    text-decoration: underline;
-}
-*/
 
 /* NAVIGATION */
 nav {
-    background-color: var(--cor-01);
+    background-color: var(--cor-02); /* ou transparent */
 }
 nav > ul {
     display: flex;
+    width: auto;
     justify-content: space-between;
-    /*width: 100%;*/
+    justify-content: center;
+    justify-content: space-evenly;
+    padding-inline-start: 0px;
 }
 nav > ul > li {
     list-style-type: none;
     padding-left: 0;
     margin-left: 0;
     display: inline-flex;
-    padding: 1%;
+
 }
 nav > ul > li > a {
     text-decoration: none;
